@@ -11,12 +11,22 @@ public class PlayerController : MonoBehaviour
 
     private float _verticalRotationStore;
     private Vector2 _mouseInput;
-    private void Update()
+
+    public float moveSpeed = 5f;
+
+    private Vector3 _moveDirection, _movement;
+
+    private void Start()
     {
-        MouseMovement();
+        Cursor.lockState = CursorLockMode.Locked; 
     }
 
-    private void MouseMovement()
+    private void Update()
+    {
+        PlayerMovement();
+    }
+
+    private void PlayerMovement()
     {
         _mouseInput = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y")) * mouseSensitivity;
 
@@ -41,6 +51,12 @@ public class PlayerController : MonoBehaviour
         _verticalRotationStore = Mathf.Clamp(_verticalRotationStore, -60f, 60f);
 
         viewPoint.rotation = Quaternion.Euler(_verticalRotationStore, yRotationEulerView, zRotationEulerView);
-        
+
+        float horizontalInput = Input.GetAxisRaw("Horizontal");
+        float forwardInput = Input.GetAxisRaw("Vertical");
+
+        _moveDirection = new Vector3(horizontalInput, 0f, forwardInput);
+        _movement = ((transform.forward * _moveDirection.z) + (transform.right * _moveDirection.x)).normalized;
+        transform.position += _movement * moveSpeed * Time.deltaTime;
     }
 }
