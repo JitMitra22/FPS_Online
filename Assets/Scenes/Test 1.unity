@@ -242,6 +242,7 @@ MonoBehaviour:
   mouseSensitivity: 1
   invertMouse: 0
   moveSpeed: 5
+  runSpeed: 8
   charCon: {fileID: 67764953}
 --- !u!1 &180276437
 GameObject:

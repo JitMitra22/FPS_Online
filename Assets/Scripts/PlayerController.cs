@@ -12,20 +12,31 @@ public class PlayerController : MonoBehaviour
     private float _verticalRotationStore;
     private Vector2 _mouseInput;
 
-    public float moveSpeed = 5f;
+    public float moveSpeed = 5f, runSpeed = 8f;
+    private float _activeMoveSpeed;
 
     private Vector3 _moveDirection, _movement;
 
     public CharacterController charCon;
 
+    private Camera _camera;
+
     private void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked; 
+        Cursor.lockState = CursorLockMode.Locked;
+
+        _camera = Camera.main;
     }
 
     private void Update()
     {
         PlayerMovement();
+    }
+
+    private void LateUpdate()
+    {
+        _camera.transform.position = viewPoint.position;
+        _camera.transform.rotation = viewPoint.rotation;
     }
 
     private void PlayerMovement()
@@ -58,7 +69,16 @@ public class PlayerController : MonoBehaviour
         float forwardInput = Input.GetAxisRaw("Vertical");
 
         _moveDirection = new Vector3(horizontalInput, 0f, forwardInput);
-        _movement = ((transform.forward * _moveDirection.z) + (transform.right * _moveDirection.x)).normalized;
-        charCon.Move(_movement * moveSpeed * Time.deltaTime);
+
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            _activeMoveSpeed = runSpeed;
+        }
+        else
+        {
+            _activeMoveSpeed = moveSpeed;
+        }
+        _movement = ((transform.forward * _moveDirection.z) + (transform.right * _moveDirection.x)).normalized * _activeMoveSpeed;
+        charCon.Move(_movement * Time.deltaTime);
     }
 }
