@@ -37,12 +37,29 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         PlayerMovement();
+
+        CursorControl();
     }
 
     private void LateUpdate()
     {
         _camera.transform.position = viewPoint.position;
         _camera.transform.rotation = viewPoint.rotation;
+    }
+
+    void CursorControl()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Cursor.lockState = CursorLockMode.None;
+        }
+        else if (Cursor.lockState == CursorLockMode.None)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+            }
+        }
     }
 
     private void PlayerMovement()
