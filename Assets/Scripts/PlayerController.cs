@@ -21,6 +21,8 @@ public class PlayerController : MonoBehaviour
 
     private Camera _camera;
 
+    public float jumpForce = 12f, gravityMod = 2.5f;
+
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -82,12 +84,18 @@ public class PlayerController : MonoBehaviour
         float yVel = _movement.y;
         _movement = ((transform.forward * _moveDirection.z) + (transform.right * _moveDirection.x)).normalized * _activeMoveSpeed;
         _movement.y = yVel;
-        _movement.y += Physics.gravity.y * Time.deltaTime;
-
+      
         if (charCon.isGrounded)
         {
             _movement.y = 0f;
         }
+
+        if (Input.GetButtonDown("Jump"))
+        {
+            _movement.y = jumpForce;
+        }
+
+        _movement.y += Physics.gravity.y * Time.deltaTime * gravityMod;
 
         charCon.Move(_movement * Time.deltaTime);
     }
