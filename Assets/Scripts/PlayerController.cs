@@ -16,6 +16,8 @@ public class PlayerController : MonoBehaviour
 
     private Vector3 _moveDirection, _movement;
 
+    public CharacterController charCon;
+
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked; 
@@ -57,6 +59,6 @@ public class PlayerController : MonoBehaviour
 
         _moveDirection = new Vector3(horizontalInput, 0f, forwardInput);
         _movement = ((transform.forward * _moveDirection.z) + (transform.right * _moveDirection.x)).normalized;
-        transform.position += _movement * moveSpeed * Time.deltaTime;
+        charCon.Move(_movement * moveSpeed * Time.deltaTime);
     }
 }
