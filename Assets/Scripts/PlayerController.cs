@@ -29,6 +29,14 @@ public class PlayerController : MonoBehaviour
 
     public GameObject bulletImpact;
 
+    public float timeBetweenShots = .1f;
+    private float shotCounter;
+
+    public float maxHeat = 10f, heatPerShot = 1f, coolRate = 4f, overHeatCoolRate = 5f;
+    private float heatCounter;
+    private bool overHeated;
+
+
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -61,6 +69,17 @@ public class PlayerController : MonoBehaviour
             GameObject bulletImpactObj = Instantiate(bulletImpact, hit.point + (hit.normal * .002f), Quaternion.LookRotation(hit.normal, Vector3.up));
             Destroy(bulletImpactObj, 10f);
         }
+
+        shotCounter = timeBetweenShots;
+
+        heatCounter += heatPerShot;
+        if (heatCounter >= maxHeat)
+        {
+            heatCounter = maxHeat;
+
+            overHeated = true;
+        }
+
     }
 
 
@@ -141,9 +160,40 @@ public class PlayerController : MonoBehaviour
 
         charCon.Move(_movement * Time.deltaTime);
 
-        if (Input.GetMouseButtonDown(0))
+        if (!overHeated)
         {
-            Shoot();
+            if (Input.GetMouseButtonDown(0))
+            {
+                Shoot();
+            }
+
+            if (Input.GetMouseButton(0))
+            {
+                shotCounter -= Time.deltaTime;
+
+                if (shotCounter <= 0)
+                {
+                    Shoot();
+                }
+            }
+            heatCounter -= coolRate * Time.deltaTime;
         }
+        else
+        {
+            heatCounter -= overHeatCoolRate * Time.deltaTime;
+
+            if(heatCounter <= 0)
+            {
+                
+                overHeated = false;
+            }
+        }
+
+        if(heatCounter < 0)
+        {
+            heatCounter = 0f;
+        }
+
+        
     }
 }
