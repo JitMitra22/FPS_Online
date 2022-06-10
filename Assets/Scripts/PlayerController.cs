@@ -27,6 +27,8 @@ public class PlayerController : MonoBehaviour
     private bool _isGrounded;
     public LayerMask groundLayers;
 
+    public GameObject bulletImpact;
+
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -55,6 +57,9 @@ public class PlayerController : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
             Debug.Log("Target: " + hit.collider.gameObject.name);
+
+            GameObject bulletImpactObj = Instantiate(bulletImpact, hit.point + (hit.normal * .002f), Quaternion.LookRotation(hit.normal, Vector3.up));
+            Destroy(bulletImpactObj, 10f);
         }
     }
 
