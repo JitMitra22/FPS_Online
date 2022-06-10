@@ -47,6 +47,18 @@ public class PlayerController : MonoBehaviour
         _camera.transform.rotation = viewPoint.rotation;
     }
 
+    void Shoot()
+    {
+        Ray ray = _camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+        ray.origin = _camera.transform.position;
+
+        if (Physics.Raycast(ray, out RaycastHit hit))
+        {
+            Debug.Log("Target: " + hit.collider.gameObject.name);
+        }
+    }
+
+
     void CursorControl()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -123,5 +135,10 @@ public class PlayerController : MonoBehaviour
         _movement.y += Physics.gravity.y * Time.deltaTime * gravityMod;
 
         charCon.Move(_movement * Time.deltaTime);
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            Shoot();
+        }
     }
 }
